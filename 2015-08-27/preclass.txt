@@ -8,13 +8,21 @@
     you should use a script to produce this plot, with both the serial
     fraction and the maximum number of cores as parameters.
 
+    We just need to plot: S(p) = 1/(alpha +(1-alpha)/p) where alpha = 0.1 and 1<= p <= 128
+
+    So we should see a speed up between 1 to 9.3431 for 1 processor and a 128 respectively.
+
 2.  Suppose a particular program can be partitioned into perfectly
     independent tasks, each of which takes time tau.  Tasks are
     set up, scheduled, and communicated to p workers at a (serial)
     central server; this takes an overhead time alpha per task.
     What is the theoretically achievable throughput (tasks/time)?
 
+
+
 3.  Under what circumstances is it best to not tune?
+
+    When the amount of time spent on tuning is greater than the amount of time saved from the optimizations applied to the program.
 
 4.  The class cluster consists of eight nodes and fifteen Xeon Phi
     accelerator boards.  Based on an online search for information on
@@ -25,3 +33,9 @@
     we cover some computer architecture.)
     
 5.  What is the approximate theoretical peak flop rate for your own machine?
+    My machine has a 2.6 GHz 2 core 4 thread machine. Following info from: http://stackoverflow.com/questions/23203710/floating-point-operations-per-cycle-intel  MAX FLOPS = (# Number of cores) * (Clock Frequency (cycles/sec) ) * (# FLOPS / cycle)
+
+Max flops = 2*2.6GHz*4FLOP/C = roughly 20.8 GFLOP/S for double precision operations
+
+Would need to take into account also the amount of latency per cycle for this processor since this should lead to a lower amount of theoretical flops than predicted here. It might also be possible that the threads might change the amount of flops as well.
+
