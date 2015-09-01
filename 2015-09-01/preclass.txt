@@ -12,6 +12,25 @@ with questions for class!
     in your calculation.  (We will return to this question again after
     we cover some computer architecture.)
     
+    Based on the similar info given in your lecture:
+    Xeon CPU
+    Max flop/s = 2 Flops/FMA * 4 FMA/vector FMA * 2 vector FMA/cycle * 12 cores * 3.2 Gcycle/s * 8 nodes = 4915.2 GFlop/s
+    Xeon Phi
+    Max flop/s = 2 Flops/FMA * 4 FMA/vector FMA * 2 vector FMA/cycle * 60 cores * 1.053 Gcycle/s * 15 nodes = 15163.2 GFlop/s
+    
+    Total
+    
+    Xeon Phi + Xeon CPU
+    
+    Max Flop/s = 20 TFlop/s
+    
+    http://ark.intel.com/products/71992/Intel-Xeon-Phi-Coprocessor-5110P-8GB-1_053-GHz-60-core
+    http://ark.intel.com/products/83352/Intel-Xeon-Processor-E5-2620-v3-15M-Cache-2_40-GHz
+    https://www-ssl.intel.com/content/www/us/en/high-performance-computing/high-performance-xeon-phi-coprocessor-brief.html page 3 shows roughly 1011 GFlop/s per board which comes out roughly to what we calculated.
+    
+    Assume that the Xeon Phi has similar FMA/cycle as a haswell architecture most likely a bad assumption though
+    
+    
 2.  What is the approximate theoretical peak flop rate for your own machine?
 
 3.  Suppose there are t tasks that can be executed in a pipeline
