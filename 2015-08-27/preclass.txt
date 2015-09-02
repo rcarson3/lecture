@@ -33,9 +33,10 @@
     we cover some computer architecture.)
     
 5.  What is the approximate theoretical peak flop rate for your own machine?
-    My machine has a 2.6 GHz 2 core 4 thread machine. Following info from: http://stackoverflow.com/questions/23203710/floating-point-operations-per-cycle-intel  MAX FLOPS = (# Number of cores) * (Clock Frequency (cycles/sec) ) * (# FLOPS / cycle)
+    Used info from your lecture on parallel architecture since mine has the same exact architecture i5-4228U
 
-Max flops = 2*2.6GHz*4FLOP/C = roughly 20.8 GFLOP/S for double precision operations
+Max flops = 2 Flops/FMA * 4 FMA/vector FMA * 2 vector FMA/cycle * 2 corers * 2.6 Gcycle/s = 83.2 GFlop/s without boost
+Max flops = 2 Flops/FMA * 4 FMA/vector FMA * 2 vector FMA/cycle * 2 corers * 3.1 Gcycle/s = 99.1 GFlop/s with boost
 
 Would need to take into account also the amount of latency per cycle for this processor since this should lead to a lower amount of theoretical flops than predicted here. It might also be possible that the threads might change the amount of flops as well.
 
