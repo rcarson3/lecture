@@ -24,18 +24,18 @@ innermost loop?)
 
 Inner most loop is 1 multiplication and 1 addition operation per cycle for the double precision operations. We have 24 bytes of information (tmp, A, and B variables) being called during each operation if we don't account for the integer. If we assume we are working on a 64-bit system than the integer can be up to 8 bytes of information, so we are now dealing with 40 bytes of information each loop. 24 of those bytes (tmp, k, and N variables), are going to be constantly kept in memory, since they are being used each loop.  The inner loop should be around (16*N + 8) bytes for the double precision operations, and then  16 bytes for integer operations. The way B array is defined in the inner most loop it is going to be constantly going to be fetched from memory because we are accessing it column order. A row vector from A could then be stored in cache, since it has all its data right next to each other in memory. We could then store (8*N + 24) bytes of information in the cache potentially? 
 
-We have 2 flop per cycle. We'll then have 2 flop/cycle*clock speed of cpu = # flops.
+We have 2 flops from the double precision.
 (# of bytes transferred between cache and memory) worst case would be if we could only keep the 24 bytes in cache. Then we would have 16*N bytes of information transferred from memory to cache, and then 16*N for the reverse process.
 
-So, if we assume the absolute worst than the AI would be roughly (# flops)/(32*N) for the inner loop. If we had an actual L3 cache size than we could find an upper bound of the AI as well.
+So, if we assume the absolute worst than the AI would be roughly (2 flops*N)/(16*N) for the inner loop. If we had an actual L3 cache size than we could find an upper bound of the AI as well.
 
-Overall, it would be (# flops)/(32*N*N*N + 16*N*N) for the worst case.
+Overall, it would be (2 flops * N^3)/(16*N*N*N) = 1/8 for the worst case.
 
 
 2. Now suppose that the cache is substantially larger than 16N, but
 substantially smaller than 8N^2. What is the AI now?
 
-
+It should now be (2 flops*N^3)/(8*N^3 + 8*N^2) = 1/4 roughly
 
 
 3. Now suppose the cache is large enough to hold all of A, B, and C. What is the
@@ -43,9 +43,7 @@ AI now? (Hint: Writing to a byte of memory not already in the cache incurs two
 memory transfers: one to move the data to the cache for writing, and one to move
 the written data back to main memory.)
 
-If we assume everything can be in cache than we should see an improvement down to (# flops)/(48*N*N)
-
-
+If we assume everything can be in cache than we should see an improvement to (2 flops * N*N*N)/(24*N*N) = N roughly
 
 
 4. Cache overflowing. On my CPU (Intel i7-4700 HQ), L1, L2, and L3 caches are 32
@@ -53,13 +51,27 @@ KB, 256 KB, and 6 MB respectively. What is the largest problem size N that will
 fit in each cache? What is the arithmetic intensity associated with each problem
 size?
 
+32KB - 32,768 B/8 B -> sqrt(4,096/2 mats) = 44 for N
+
+256KB - 262,144 B/8 B -> sqrt(32,768/ 2 mats) = 128 for N
+
+6 MB -  6,291,456 B/ 8 B->sqrt(786,432/2 mats)= 627 for N
+
 
 5. My CPU has 4 cores, each of which can do 8 fused multiply-adds per cycle, has
 a clock rate of 2.4 GHz, and a memory bandwidth of 25.6 GB/s. At what arithmetic
 intensity does my machine become CPU-bound?
 
+ 2*8*4*2*2.4*1e9 = 307 GFLOP/S
+ 
+ Memory Bandwidth for machine for double precision = 25.6 GB/s / 8B = 3.2 GB/s
+ 
+ AI = 307/3.2 = 95.9 GFLOP/GB 
+
 
 6. So, for what size range for N will naive matmul be CPU-bound on my machine?
+
+sqrt(95.9*10e9/2 mats) = 218,974 for N assuming that you can manage to actually get the peak number of flop/s 
 
 
 7. So, what will a plot of Flops/sec vs N look like?
