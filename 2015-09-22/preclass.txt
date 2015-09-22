@@ -1,7 +1,11 @@
 0.  How much time did you spend on this pre-class exercise, and when?
 
+I spent about two hours going through the questions and listening to the presentations the night before.
+
 1.  What are one or two points that you found least clear in the
     9/22 slide decks (including the narration)?
+
+The portion on adding work to the queue using pthreads is a little unclear.
 
 2.  The pthread_mc.c file in the demo subdirectory runs a Monte Carlo
     simulation to estimate the expected value of a uniform random
@@ -13,14 +17,23 @@
        time per trial (t_trial), and time to update the global
        counters in the critical section (t_update).
 
+	run time per batch = N*t_trial + t_update*p
+
     b) Run the code with a few different parameter values in order
        to estimate N, t_trial, and t_update for this code on
        a totient compute node.
+
+	If we make N really large such that N*t_trial >> t_update*p than t_trial can be found.
+	If we make N really small such that N*t_trial << t_update*p than t_update can be found.
+
+	Didn’t get around to running the code yet to find the parameters on the totient cluster.
 
     c) Based on your model, suggest a strategy for choosing the batch
        size.  How might you generalize this strategy to automatically
        choose batch sizes for different types of computational
        experiments?
+
+	You want to choose a batch size such that the two timed sections are close to the same time or such that the calculations take a bit longer than the lock times maybe by a factor of 10 or so. The biggest thing though is that you don’t want to spend too much time doing calculations such that you do more work than required because the batch size blows way past the necessary number of iterations/experiments required. It would require a bit of small scale testing to get the correct timing down for the updating process before scaling it up to large experiments. Also, the timing for the calculations would also be desired, since it can give you a good idea about how long your spending doing calculations during each batch cycle. 
     
 3.  In the workq subdirectory of this directory, there is a basic work
     queue implementation.  Following the strategy outlined in the
