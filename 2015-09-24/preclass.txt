@@ -1,28 +1,48 @@
 0.  How much time did you spend on this pre-class exercise, and when?
 
+	A few hours when including the readings and all. The day before the lecture I went over the exercise.
+
 1.  What are one or two points that you found least clear in the
     9/24 slide decks (including the narration)?
+
+	It was in the OpenMP Mistake paper. What exactly are atomic operations? 
 
 2.  The omp_mc.c file in the demo subdirectory runs a Monte Carlo
     simulation to estimate the expected value of a uniform random
     variable.  The "-p" option sets the number of processors used,
     while "-b" sets the number of trials between synchronizations.
 
+Should be the same as last pre-class questions for this.
+
     a) Write a model for the run time for this simulation code in
        terms of the number of trials (N), number of processors (p),
        time per trial (t_trial), and time to update the global
        counters in the critical section (t_update).
 
+	T = N/B*t_update + N/p*t_trial (+ t_constant) <— a constant term might be required from any overhead that might exist while running
+
     b) Run the code with a few different parameter values in order
        to estimate N, t_trial, and t_update for this code on
        a totient compute node.
+
+	If we make N really large such that N/B*t_update >> N/p*t_trial than t_trial can be found.
+	If we make N really small such that N/B*t_update << N/p*t_trial than t_update can be found.
+	
+	The question was updated to make N trials the number of times it runs. Then the batch size was added. The logic from above still stands but instead of varying N we just vary B.
+
+
+	Didn’t get around to running the code yet to find the parameters on the totient cluster.
 
     c) Based on your model, suggest a strategy for choosing the batch
        size.  How might you generalize this strategy to automatically
        choose batch sizes for different types of computational
        experiments?
 
+You want to choose a batch size such that the two timed sections are close to the same time or such that the calculations take a bit longer than the lock times maybe by a factor of 10 or so. The biggest thing though is that you don’t want to spend too much time doing calculations such that you do more work than required because the batch size blows way past the necessary number of iterations/experiments required. It would require a bit of small scale testing to get the correct timing down for the updating process before scaling it up to large experiments. Also, the timing for the calculations would also be desired, since it can give you a good idea about how long your spending doing calculations during each batch cycle.
+
 3.  The "OpenMP pitfalls" paper describes some common pitfalls (both
     performance and correctness) in OpenMP codes.  Go through the
     checklist in the paper for omp_mc.c.  What performance mistakes
     are there in the demonstration implementation?
+
+When reading in the variables like done_flag they should be flushed before use just in case you run into a rare edge case. I don’t really understand the differences between critical and atomic operations, but I feel like it might be possible that a few places in the code might run into this castoff being able to use atomic over critical. Also, if possible we should avoid having function calls in the critical section.

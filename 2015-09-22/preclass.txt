@@ -17,14 +17,19 @@ The portion on adding work to the queue using pthreads is a little unclear.
        time per trial (t_trial), and time to update the global
        counters in the critical section (t_update).
 
-	run time per batch = N*t_trial + t_update*p
+	%%run time per batch = N*(B*t_trial/p + t_update*p)
+
+	T = N/B*t_update + N/p*t_trial (+ t_constant) <— a constant term might be required from any overhead that might exist while running
 
     b) Run the code with a few different parameter values in order
        to estimate N, t_trial, and t_update for this code on
        a totient compute node.
 
-	If we make N really large such that N*t_trial >> t_update*p than t_trial can be found.
-	If we make N really small such that N*t_trial << t_update*p than t_update can be found.
+	If we make N really large such that N/B*t_update >> N/p*t_trial than t_trial can be found.
+	If we make N really small such that N/B*t_update << N/p*t_trial than t_update can be found.
+	
+	The question was updated to make N trials the number of times it runs. Then the batch size was added. The logic from above still stands but instead of varying N we just vary B.
+
 
 	Didn’t get around to running the code yet to find the parameters on the totient cluster.
 
