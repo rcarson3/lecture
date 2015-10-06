@@ -1,7 +1,12 @@
 0.  How much time did you spend on this pre-class exercise, and when?
 
+I spent roughly an hour working on it the night before, and apparently right after the PBS part of the cluster was brought down. So, I wasn’t able to put in the extra time to work on parts 2a and 2b.
+
 1.  What are one or two points that you found least clear in the
     10/06 slide decks (including the narration)?
+
+The only confusing part is a bit how the different networking styles work.
+
 
 2.  In the upcoming lecture (10/8), we will discuss how to model
     latency and bandwidth of MPI sends and receives using the
@@ -14,6 +19,8 @@
        (under /usr/local/intel).  Using this version of MPI and the
        default PBS files, run the pingpong examples (demo/pingpong).
 
+	Cluster was down when trying to run these.
+
     b) Now do "module load openmpi/1.10.0-icc-15.0.3" after loading
        the CS 5220 module.  Check by typing "which mpicc" that you
        are now using a different version of mpicc.  Compile with
@@ -21,7 +28,23 @@
        you will have to add a module load to the start of the PBS
        scripts).  How do the timings differ from the Intel MPI timings?
 
+	Cluster was down when trying to run these.
+
     c) When running at the peak rate (e.g. 16 double precision
        flops/cycle), how many (double precision) floating point ops
        could two totient cores do in the minimal time required for one
        MPI message exchange?
+
+	Flops computed = 2 core peak rate * time_communication
+
+	Flops computed = 102.4 GFLOP/S * t_comm
+
+	The above number was gotten from the preclass 9/01 question 1 for the xeon cpu.
+
+	Xeon CPU
+    Max flop/s = 2 Flops/FMA * 4 FMA/vector FMA * 2 vector FMA/cycle * 12 cores * 3.2 Gcycle/s * 8 nodes = 4915.2 GFlop/s
+	Divide the above by 48 to get the 102.4 GFLOP/S number.
+
+	time_communication minimum would assume that the two cores are on the same node. If they aren’t then you would end up with a larger talking time because of cross-nodal communication.
+
+Once the cluster is back up we can use the timings we got from parts a and b to get these values.
