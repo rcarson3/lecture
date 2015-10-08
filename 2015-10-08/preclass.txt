@@ -1,7 +1,11 @@
 0.  How much time did you spend on this pre-class exercise, and when?
 
+I spent about 2 hours or so on it the day before.
+
 1.  What are one or two points that you found least clear in the
     10/08 slide decks (including the narration)?
+
+I really don’t understand the nonblocking technique that well. An example of how that works would be helpful and maybe some of the calculations we can do in the mean time during it.
 
 2.  Now that we are now basically a third of the way into the
     semester, and are (mostly) settled into the steady pace of things,
@@ -10,6 +14,8 @@
     particularly useful -- venting about the cluster, for example, is
     understandable but doesn't help me that much in adjusting!
 
+The class seems fine so far. Although, I have noticed that we haven’t been using the ether pad thing as much during class anymore to post our thoughts on your general class questions.
+
 3.  The ring demo implements the protocol described in the particle
     systems slide deck from 9/15:
 
@@ -17,9 +23,13 @@
 
     a) In your own words, describe what ring.c is doing.
 
+	It first calculates interactions between all local data. Then the processors all go through and communicate with their neighboring processors. The processor in front is sent a copy of the buffer. The data from the processor behind the current one is then received. It then has a special diagnostic message for processor 0. Then it swaps the current and received buffers. Then the interactions are computed again using the received data. If I understand this correctly than the result should be built up based up the current processor value and the previous processor values for the interactions.
+
     b) How might you modify the code to have the same computational
        pattern, but using non-blocking communication rather than
        MPI_Sendrecv?  Note that according to the MPI standard,
        one isn't supposed to read from a buffer that is being
        handled by a non-blocking send, so it is probably necessary
        to use three temporary buffers rather than the current two.
+
+	I didn’t understand this section as well but could we use the MPI_Issend command with the MPI_Receive command. If we needed three buffers. I would assume one would be like prev_buffer, curr_buffer, and future_buffer where when we swap the current and past buffers we can instead do that with past and future where we set future = current before starting.
